@@ -4,7 +4,7 @@ Course Library — programming courses catalog. KBTU project. Angular + Django R
 ## Team
 - Aushet Askhat
 - Bazarbayev Mereke
-- ...
+- Bakir Didar
 
 ## Project
 Course catalog website. Students can browse programming courses, filter by category/platform, leave reviews, and save favorites.
