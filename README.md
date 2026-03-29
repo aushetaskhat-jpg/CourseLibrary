@@ -15,4 +15,4 @@ Course catalog website. Students can browse programming courses, filter by categ
 - Auth: JWT
 
 ## Links
-GitHub: https://github.com/your-username/course-library
+GitHub: https://github.com/aushetaskhat-jpg/CourseLibrary/tree/main
