@@ -1,0 +1,78 @@
+<!-- src/app/components/course-modal/course-modal.component.html -->
+<div class="overlay" (click)="onOverlayClick($event)">
+  <div class="modal">
+
+    <!-- Hero -->
+    <div class="mhero" [style.background]="course.bgColor">
+      <span style="font-size:52px">{{ course.emoji }}</span>
+      <button class="mcl" (click)="close.emit()">✕</button>
+    </div>
+
+    <div class="mbody">
+      <div class="mtitle">{{ course.title }}</div>
+      <div class="mauth">👤 {{ course.author }} · {{ course.platform }}</div>
+      <div class="mdesc">{{ course.description }}</div>
+
+      <!-- Stats -->
+      <div class="mstats">
+        <div class="ms">
+          <div class="msn" style="color:var(--amber)">{{ course.avgRating }}</div>
+          <div class="msl">Рейтинг</div>
+        </div>
+        <div class="ms">
+          <div class="msn" style="color:var(--accent)">{{ course.studentsCount / 1000 | number:'1.0-0' }}K</div>
+          <div class="msl">Студентов</div>
+        </div>
+        <div class="ms">
+          <div class="msn" style="color:var(--green)">{{ course.durationHours }} ч</div>
+          <div class="msl">Длительность</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="mactions">
+        <a [href]="course.url" target="_blank" class="btn btn-primary" style="flex:1;text-align:center;text-decoration:none;display:block;padding:9px">
+          Открыть курс →
+        </a>
+        <button class="btn" (click)="toggleFav()">
+          {{ isFav ? '♥ Сохранено' : '♡ Сохранить' }}
+        </button>
+      </div>
+
+      <!-- Reviews -->
+      <div class="revs">
+        <div class="revtitle">Отзывы ({{ course.reviewsCount | number }})</div>
+
+        @for (r of mockReviews; track r.name) {
+          <div class="rev">
+            <div class="revh">
+              <div class="rav" [style.background]="r.color">{{ r.initials }}</div>
+              <div class="rname">{{ r.name }}</div>
+              <div class="rstars">{{ starRow(r.rating) }}</div>
+            </div>
+            <div class="rtxt">{{ r.text }}</div>
+          </div>
+        }
+
+        <!-- Review form -->
+        <div class="rev-form">
+          <h4>Оставить отзыв</h4>
+          <div class="star-pick">
+            @for (i of [1,2,3,4,5]; track i) {
+              <button [class]="starClass(i)"
+                (click)="pickStar(i)"
+                (mouseenter)="hoverStar(i)"
+                (mouseleave)="leaveStar()">★</button>
+            }
+          </div>
+          <textarea [(ngModel)]="reviewText" placeholder="Ваш отзыв о курсе..."></textarea>
+          <div class="mfooter">
+            <button class="btn btn-primary" (click)="submitReview()">Отправить отзыв</button>
+            <button class="btn" (click)="close.emit()">Отмена</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

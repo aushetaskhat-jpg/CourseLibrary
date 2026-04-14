@@ -1,0 +1,55 @@
+<!-- src/app/components/auth-modal/auth-modal.component.html -->
+<div class="overlay" (click)="onOverlayClick($event)">
+  <div class="auth-modal">
+
+    @if (mode === 'login') {
+      <div class="auth-title">Добро пожаловать</div>
+      <div class="auth-sub">Войдите в свой аккаунт</div>
+      <div class="field">
+        <label>Логин</label>
+        <input type="text" [(ngModel)]="username" placeholder="aushet">
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input type="password" [(ngModel)]="password" placeholder="••••••••" (keyup.enter)="submit()">
+      </div>
+      <button class="btn btn-primary full" (click)="submit()">Войти</button>
+      <div class="auth-switch">
+        Нет аккаунта?
+        <a (click)="switchMode.emit('register')">Зарегистрироваться</a>
+      </div>
+
+    } @else {
+      <div class="auth-title">Регистрация</div>
+      <div class="auth-sub">Создайте аккаунт CourseLibrary</div>
+      <div class="fields-row">
+        <div class="field">
+          <label>Имя</label>
+          <input type="text" [(ngModel)]="firstName" placeholder="Aushet">
+        </div>
+        <div class="field">
+          <label>Фамилия</label>
+          <input type="text" [(ngModel)]="lastName" placeholder="Askhat">
+        </div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="email" placeholder="you@kbtu.kz">
+      </div>
+      <div class="field">
+        <label>Логин</label>
+        <input type="text" [(ngModel)]="username" placeholder="aushet">
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input type="password" [(ngModel)]="password" placeholder="••••••••" (keyup.enter)="submit()">
+      </div>
+      <button class="btn btn-primary full" (click)="submit()">Создать аккаунт</button>
+      <div class="auth-switch">
+        Уже есть аккаунт?
+        <a (click)="switchMode.emit('login')">Войти</a>
+      </div>
+    }
+
+  </div>
+</div>

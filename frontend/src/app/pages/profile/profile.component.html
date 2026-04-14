@@ -1,0 +1,55 @@
+<!-- src/app/pages/profile/profile.component.html -->
+<div class="page">
+
+  @if (auth.isLoggedIn()) {
+    <!-- Avatar & name -->
+    <div class="profile-header">
+      <div class="av-lg">{{ auth.getInitials() }}</div>
+      <div>
+        <div class="pname">{{ auth.currentUser()?.firstName }} {{ auth.currentUser()?.lastName }}</div>
+        <div class="pemail">{{ auth.currentUser()?.email }} · KBTU Student</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="ms">
+        <div class="msn">{{ svc.getFavorites().length }}</div>
+        <div class="msl">Сохранено</div>
+      </div>
+      <div class="ms">
+        <div class="msn">3</div>
+        <div class="msl">Отзывов</div>
+      </div>
+      <div class="ms">
+        <div class="msn">2</div>
+        <div class="msl">В процессе</div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <h3 class="section-title">Настройки</h3>
+    <div class="settings-card">
+      <div class="setting-row">
+        <span>Email уведомления</span>
+        <span class="status-on">Включено</span>
+      </div>
+      <div class="setting-row">
+        <span>Язык интерфейса</span>
+        <span class="status-off">Русский</span>
+      </div>
+      <div class="setting-row">
+        <span>Тема</span>
+        <span class="status-off">Тёмная</span>
+      </div>
+    </div>
+
+    <button class="btn btn-danger" (click)="logout()">Выйти из аккаунта</button>
+
+  } @else {
+    <div class="not-logged">
+      <div class="ico">👤</div>
+      <p>Войдите в аккаунт, чтобы увидеть профиль</p>
+    </div>
+  }
+</div>

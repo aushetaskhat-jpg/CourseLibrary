@@ -1,1 +1,122 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0D0F12;
+  --surf: #13161C;
+  --card: #191D25;
+  --bdr: #252B38;
+  --accent: #4F8EF7;
+  --accent2: #7C5EF7;
+  --green: #3DD68C;
+  --amber: #F5A623;
+  --red: #FF5C5C;
+  --text: #E8EBF0;
+  --muted: #7A8499;
+  --tag: #1E2330;
+  --fh: 'Syne', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+}
+
+body {
+  font-family: var(--fb);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--fb);
+}
+
+input, textarea, select {
+  font-family: var(--fb);
+}
+
+/* Utility classes */
+.btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--bdr);
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  transition: all 0.18s;
+}
+
+.btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff !important;
+  border-color: var(--accent) !important;
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+.btn-danger {
+  color: var(--red) !important;
+  border-color: var(--red) !important;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+}
+
+.toast {
+  background: var(--card);
+  border: 1px solid var(--bdr);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 13px;
+  color: var(--text);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  overflow-y: auto;
+}
+
+/* Stars */
+.stars { color: var(--amber); letter-spacing: -1px; }
+.price-free { font-size: 13px; font-weight: 600; color: var(--green); }
+.price-paid { font-size: 13px; font-weight: 600; color: var(--text); }

@@ -1,0 +1,65 @@
+/* src/app/components/navbar/navbar.component.css */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--bdr);
+  background: var(--surf);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand {
+  font-family: var(--fh);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  color: var(--text);
+  text-decoration: none;
+}
+.brand span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nl {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.18s;
+  text-decoration: none;
+}
+.nl:hover, .nl.act {
+  color: var(--text);
+  background: var(--card);
+}
+
+.nav-r {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}

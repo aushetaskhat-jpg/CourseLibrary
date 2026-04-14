@@ -1,0 +1,32 @@
+<!-- src/app/components/course-card/course-card.component.html -->
+<div class="cc" [class.saved]="isFav" (click)="open()">
+
+  <!-- Thumbnail -->
+  <div class="thumb" [style.background]="course.bgColor">
+    <span class="emoji">{{ course.emoji }}</span>
+    <span class="pbadge">{{ course.platform }}</span>
+    <button class="sbtn" (click)="toggleFav($event)" [title]="isFav ? 'Убрать из избранного' : 'В избранное'">
+      {{ isFav ? '♥' : '♡' }}
+    </button>
+  </div>
+
+  <!-- Body -->
+  <div class="cbody">
+    <div class="ccat">{{ course.categoryName }} · {{ course.level }}</div>
+    <div class="ctitle">{{ course.title }}</div>
+    <div class="cauthor">{{ course.author }}</div>
+    <div class="cmeta">
+      <span class="stars">{{ stars }}</span>
+      <span class="rnum">{{ course.avgRating }} ({{ course.reviewsCount | number }})</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="cfooter">
+    <span [class]="course.price === 0 ? 'price-free' : 'price-paid'">
+      {{ course.price === 0 ? 'Бесплатно' : '$' + course.price }}
+    </span>
+    <span class="lvl">{{ course.durationHours }} ч</span>
+  </div>
+
+</div>

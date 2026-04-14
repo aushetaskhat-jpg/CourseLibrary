@@ -1,0 +1,28 @@
+<!-- src/app/components/navbar/navbar.component.html -->
+<nav>
+  <div class="brand" routerLink="/">Course<span>Library</span></div>
+
+  <div class="nav-links">
+    <a class="nl" routerLink="/catalog" routerLinkActive="act">Каталог</a>
+    <a class="nl" routerLink="/favorites" routerLinkActive="act">Избранное</a>
+    <a class="nl" routerLink="/profile" routerLinkActive="act">Профиль</a>
+  </div>
+
+  <div class="nav-r">
+    @if (!auth.isLoggedIn()) {
+      <button class="btn" (click)="openLogin()">Войти</button>
+      <button class="btn btn-primary" (click)="openRegister()">Регистрация</button>
+    } @else {
+      <span style="font-size:13px;color:var(--muted)">{{ auth.currentUser()?.firstName }}</span>
+      <div class="av" (click)="auth.logout()">{{ auth.getInitials() }}</div>
+    }
+  </div>
+</nav>
+
+@if (showAuth()) {
+  <app-auth-modal
+    [mode]="authMode()"
+    (close)="closeAuth()"
+    (switchMode)="authMode.set($event)"
+  />
+}

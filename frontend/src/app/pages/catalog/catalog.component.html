@@ -1,0 +1,99 @@
+<!-- src/app/pages/catalog/catalog.component.html -->
+<div class="hero">
+  <h1>Учись программированию<br><span class="hl">с лучших платформ</span></h1>
+  <p>Более 200 курсов по Python, JavaScript, DevOps, ML и не только — всё в одном каталоге.</p>
+  <div class="sw">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="opacity:.45;flex-shrink:0">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/>
+    </svg>
+    <input type="text" [ngModel]="search()" (ngModelChange)="search.set($event)" placeholder="Поиск курсов...">
+  </div>
+</div>
+
+<!-- Stats bar -->
+<div class="sbar">
+  <div class="stat"><div class="snum">{{ svc.getCourses().length }}</div><div class="slbl">Курсов</div></div>
+  <div class="stat"><div class="snum">6</div><div class="slbl">Категорий</div></div>
+  <div class="stat"><div class="snum">5</div><div class="slbl">Платформ</div></div>
+  <div class="stat"><div class="snum">4.7</div><div class="slbl">Средний рейтинг</div></div>
+</div>
+
+<div class="main">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="ftitle">Категория</div>
+    @for (cat of categories; track cat.slug) {
+      <button class="fb" [class.act]="category() === cat.slug" (click)="setCategory(cat.slug)">
+        <span>{{ cat.icon }} {{ cat.label }}</span>
+        <span class="cnt">{{ cat.count }}</span>
+      </button>
+    }
+
+    <div class="fsep"></div>
+
+    <div class="ftitle">Платформа</div>
+    @for (p of platforms; track p) {
+      <button class="fb" [class.act]="platform() === p" (click)="setPlatform(p)">
+        {{ p === 'all' ? 'Все платформы' : p }}
+      </button>
+    }
+
+    <div class="fsep"></div>
+
+    <div class="ftitle">Стоимость</div>
+    <button class="fb" [class.act]="price() === 'all'"  (click)="setPrice('all')">Все</button>
+    <button class="fb" [class.act]="price() === 'free'" (click)="setPrice('free')">Бесплатные</button>
+    <button class="fb" [class.act]="price() === 'paid'" (click)="setPrice('paid')">Платные</button>
+
+    <div class="fsep"></div>
+
+    <div class="ftitle">Уровень</div>
+    <button class="fb" [class.act]="level() === 'all'"          (click)="setLevel('all')">Все уровни</button>
+    <button class="fb" [class.act]="level() === 'Начинающий'"   (click)="setLevel('Начинающий')">Начинающий</button>
+    <button class="fb" [class.act]="level() === 'Средний'"      (click)="setLevel('Средний')">Средний</button>
+    <button class="fb" [class.act]="level() === 'Продвинутый'"  (click)="setLevel('Продвинутый')">Продвинутый</button>
+
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="cheader">
+      <span class="rcount">Найдено <strong>{{ courses().length }}</strong> курсов</span>
+      <select [ngModel]="sort()" (ngModelChange)="setSort($event)">
+        <option value="rating">По рейтингу</option>
+        <option value="price">По цене</option>
+        <option value="newest">Новые</option>
+        <option value="popular">Популярные</option>
+      </select>
+    </div>
+
+    <!-- Tags -->
+    <div class="tags-row">
+      @for (t of tags; track t.slug) {
+        <button class="tag" [class.act]="tag() === t.slug" (click)="setTag(t.slug)">
+          {{ t.label }}
+        </button>
+      }
+    </div>
+
+    <!-- Grid -->
+    @if (courses().length > 0) {
+      <div class="grid">
+        @for (c of courses(); track c.id) {
+          <app-course-card [course]="c" (openCourse)="openCourse($event)" />
+        }
+      </div>
+    } @else {
+      <div class="empty">
+        <div class="empty-ico">🔍</div>
+        <p>Ничего не найдено.<br>Попробуйте другой запрос.</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+@if (selectedCourse()) {
+  <app-course-modal [course]="selectedCourse()!" (close)="closeModal()" />
+}
