@@ -1,5 +1,4 @@
-// src/app/pages/catalog/catalog.component.ts
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CourseService } from '../../services/course.service';
@@ -17,6 +16,7 @@ import { CourseModalComponent } from '../../components/course-modal/course-modal
 export class CatalogComponent {
   svc = inject(CourseService);
 
+  // фильтры
   search    = signal('');
   category  = signal('all');
   platform  = signal('all');
@@ -25,18 +25,58 @@ export class CatalogComponent {
   tag       = signal('all');
   sort      = signal('rating');
 
+  // выбранный курс
   selectedCourse = signal<Course | null>(null);
 
-  courses = computed(() => this.svc.filter({
-    search:   this.search(),
-    category: this.category(),
-    platform: this.platform(),
-    price:    this.price(),
-    level:    this.level(),
-    tag:      this.tag(),
-    sort:     this.sort(),
-  }));
+  // список курсов (с API)
+  courses = signal<Course[]>([]);
 
+  // загрузка данных
+  constructor() {
+    this.loadCourses();
+  }
+
+  loadCourses() {
+    this.svc.getCourses().subscribe(data => {
+      this.courses.set(data);
+    });
+  }
+
+  // фильтрация (теперь вручную)
+  getFilteredCourses(): Course[] {
+    let list = [...this.courses()];
+
+    if (this.search()) {
+      const q = this.search().toLowerCase();
+      list = list.filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.author.toLowerCase().includes(q)
+      );
+    }
+
+    if (this.category() !== 'all') {
+      list = list.filter(c => c.category === this.category());
+    }
+
+    if (this.platform() !== 'all') {
+      list = list.filter(c => c.platform === this.platform());
+    }
+
+    if (this.price() === 'free') list = list.filter(c => c.price === 0);
+    if (this.price() === 'paid') list = list.filter(c => c.price > 0);
+
+    if (this.level() !== 'all') {
+      list = list.filter(c => c.level === this.level());
+    }
+
+    if (this.sort() === 'rating') {
+      list.sort((a, b) => b.avgRating - a.avgRating);
+    }
+
+    return list;
+  }
+
+  // категории
   categories = [
     { slug: 'all',     label: 'Все курсы',  icon: '', count: 12 },
     { slug: 'python',  label: 'Python',      icon: '🐍', count: 2 },
@@ -47,23 +87,13 @@ export class CatalogComponent {
     { slug: 'backend', label: 'Backend',     icon: '🔧', count: 2 },
   ];
 
-  platforms = ['all', 'Coursera', 'Udemy', 'Stepik', 'YouTube', 'freeCodeCamp'];
+  platforms = ['all', 'Coursera', 'Udemy', 'Stepik', 'YouTube'];
 
-  tags = [
-    { slug: 'all',         label: 'Все' },
-    { slug: 'hot',         label: '🔥 Популярное' },
-    { slug: 'new',         label: '✨ Новое' },
-    { slug: 'free',        label: 'Бесплатно' },
-    { slug: 'certificate', label: 'С сертификатом' },
-    { slug: 'ru',          label: 'На русском' },
-    { slug: 'project',     label: 'С проектами' },
-  ];
-
+  // события
   setCategory(cat: string) { this.category.set(cat); }
   setPlatform(p: string)   { this.platform.set(p); }
   setPrice(p: string)      { this.price.set(p); }
   setLevel(l: string)      { this.level.set(l); }
-  setTag(t: string)        { this.tag.set(t); }
   setSort(s: string)       { this.sort.set(s); }
 
   openCourse(c: Course) { this.selectedCourse.set(c); }
