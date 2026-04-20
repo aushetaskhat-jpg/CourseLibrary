@@ -1,0 +1,315 @@
+{
+  "info": {
+    "name": "CourseLibrary API",
+    "description": "Complete API collection for CourseLibrary backend (Django + DRF)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api/v1" },
+    { "key": "token",    "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"pass1234\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"token\": \"9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b\",\n  \"user\": {\n    \"id\": 2,\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["pm.collectionVariables.set('token', pm.response.json().token);"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"token\": \"9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b\",\n  \"user\": {\n    \"id\": 1,\n    \"username\": \"admin\",\n    \"email\": \"admin@example.com\",\n    \"first_name\": \"\",\n    \"last_name\": \"\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/auth/logout/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"detail\": \"Logged out successfully.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/categories/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  { \"id\": 1, \"name\": \"Python\", \"slug\": \"python\", \"icon\": \"🐍\", \"course_count\": 1 },\n  { \"id\": 2, \"name\": \"JavaScript\", \"slug\": \"js\", \"icon\": \"⚡\", \"course_count\": 3 }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "List Courses",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/courses/",
+              "host": ["{{base_url}}"],
+              "path": ["courses", ""],
+              "query": [
+                { "key": "search",   "value": "",        "disabled": true },
+                { "key": "category", "value": "python",  "disabled": true },
+                { "key": "platform", "value": "Stepik",  "disabled": true },
+                { "key": "price",    "value": "free",    "disabled": true },
+                { "key": "level",    "value": "beginner","disabled": true },
+                { "key": "tag",      "value": "hot",     "disabled": true },
+                { "key": "sort",     "value": "rating",  "disabled": false }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"title\": \"Python для начинающих\",\n    \"author\": \"Тимур Машнин\",\n    \"category\": 1,\n    \"category_name\": \"Python\",\n    \"category_slug\": \"python\",\n    \"platform\": \"Stepik\",\n    \"level\": \"beginner\",\n    \"price\": \"0.00\",\n    \"avg_rating\": \"4.8\",\n    \"is_favorited\": false\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Course Detail",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/courses/1/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"title\": \"Python для начинающих\",\n  \"reviews\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Course (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/courses/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Course\",\n  \"author\": \"Author Name\",\n  \"category\": 1,\n  \"platform\": \"Udemy\",\n  \"level\": \"beginner\",\n  \"price\": 0,\n  \"duration_hours\": 10,\n  \"url\": \"https://example.com\",\n  \"emoji\": \"📚\",\n  \"bg_color\": \"#101010\",\n  \"language\": \"en\",\n  \"tags\": [\"new\"]\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 13,\n  \"title\": \"New Course\",\n  \"author\": \"Author Name\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Course (admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/courses/13/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 9.99\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 13,\n  \"title\": \"New Course\",\n  \"price\": \"9.99\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Course (admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/courses/13/"
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "List Reviews for Course",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/courses/1/reviews/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"user\": { \"id\": 1, \"username\": \"admin\", \"first_name\": \"\" },\n    \"rating\": 5,\n    \"text\": \"Отличный курс!\",\n    \"created_at\": \"2024-01-15T10:30:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Add Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/courses/1/reviews/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"text\": \"Отличный курс, всё понятно объяснено!\"\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"user\": { \"id\": 1, \"username\": \"admin\", \"first_name\": \"\" },\n  \"rating\": 5,\n  \"text\": \"Отличный курс, всё понятно объяснено!\",\n  \"created_at\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "item": [
+        {
+          "name": "List Favorites",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/favorites/"
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"course\": { \"id\": 1, \"title\": \"Python для начинающих\" },\n    \"created_at\": \"2024-01-15T10:30:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Add to Favorites",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{base_url}}/favorites/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"course_id\": 1\n}"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"course\": { \"id\": 1, \"title\": \"Python для начинающих\" },\n  \"created_at\": \"2024-01-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Remove from Favorites",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+            "url": "{{base_url}}/favorites/1/"
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
